@@ -17,14 +17,19 @@ public interface UserMapper {
     @Mappings({
             @Mapping(source="user.id", target="id"),
             @Mapping(source="user.username", target="username"),
-            @Mapping(source="user.fullname", target="fullname"),
-            @Mapping(source="user.password", target="password")
+            @Mapping(source="user.firstname", target="firstname"),
+            @Mapping(source="user.lastname", target="lastname"),
+            @Mapping(source="user.password", target="password"),
+            @Mapping(source="user.role", target="role"),
+            @Mapping(source="user.status", target="status"),
+            @Mapping(source="user.orders", target="orders")
     })
     UserDTO userToUserDTO(User user);
     @Mappings({
             @Mapping(source="userDTO.id", target="id"),
             @Mapping(source="userDTO.username", target="username"),
-            @Mapping(source="userDTO.fullname", target="fullname"),
+            @Mapping(source="userDTO.firstname", target="firstname"),
+            @Mapping(source="userDTO.lastname", target="lastname"),
             @Mapping(source="userDTO.password", target="password"),
             @Mapping(target = "role", ignore = true),
             @Mapping(target = "status", ignore = true),

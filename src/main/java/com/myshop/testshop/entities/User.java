@@ -10,7 +10,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -25,8 +24,10 @@ public class User{
     private Long id;
     @Column(name = "username", length = 64, unique = true)
     private String username;
-    @Column(name = "fullname", length = 64, unique = true)
-    private String fullname;
+    @Column(name = "firstname", length = 64)
+    private String firstname;
+    @Column(name = "lastname", length = 64)
+    private String lastname;
     @Column(name = "password", length = 3000, updatable = false)
     private String password;
     @Enumerated(value = EnumType.STRING)

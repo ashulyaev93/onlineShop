@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -28,6 +27,7 @@ public class Order {
     @JsonFormat(pattern = "yyyy-MM-dd'HH:mm:ss'")
     @Column(updatable = false)
     private LocalDateTime createdDate;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
