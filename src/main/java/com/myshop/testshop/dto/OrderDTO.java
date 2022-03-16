@@ -1,6 +1,7 @@
 package com.myshop.testshop.dto;
 
 import com.myshop.testshop.entities.Product;
+import com.myshop.testshop.entities.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,6 +14,6 @@ public class OrderDTO {
     private String code;
     private Double totalPrice;
     private LocalDateTime createdDate;
-    private UserDTO user;
+    private User user;
     private List<Product> product;
 }

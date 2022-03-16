@@ -65,6 +65,6 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok("Rule with id = " + productId + " deleted!");
+        return ResponseEntity.ok("Product with id = " + productId + " deleted!");
     }
 }

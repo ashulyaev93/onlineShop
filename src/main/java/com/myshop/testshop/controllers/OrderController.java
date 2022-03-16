@@ -1,6 +1,7 @@
 package com.myshop.testshop.controllers;
 
 import com.myshop.testshop.dto.OrderDTO;
+import com.myshop.testshop.dto.OrderProductDTO;
 import com.myshop.testshop.entities.Order;
 import com.myshop.testshop.mappers.OrderMapper;
 import com.myshop.testshop.services.impl.OrderServiceImpl;
@@ -44,9 +45,9 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders(){
-        List<Order> ordersList = orderService.getAllOrders();
+        List<Order> orderList = orderService.getAllOrders();
 
-        return new ResponseEntity<>(ordersList, HttpStatus.OK);
+        return ResponseEntity.ok(orderList);
     }
 
     @GetMapping("/{orderId}")
@@ -65,6 +66,14 @@ public class OrderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return ResponseEntity.ok("Rule with id = " + orderId + " deleted!");
+        return ResponseEntity.ok("Order with id = " + orderId + " deleted!");
+    }
+
+    @PostMapping("/addProduct")
+    public ResponseEntity<String> addProduct(@Validated @RequestBody OrderProductDTO orderProductDTO) {
+
+        orderService.addProducts(orderProductDTO);
+
+        return ResponseEntity.ok("Product with id = " + orderProductDTO.getProductId() + " added at order with id = " + orderProductDTO.getOrderId());
     }
 }

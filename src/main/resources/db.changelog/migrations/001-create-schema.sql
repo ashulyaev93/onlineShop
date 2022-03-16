@@ -3,7 +3,7 @@ create table orders (
     code varchar(64),
     created_date timestamp,
     total_price float8,
-    user_id int8 not null,
+    user_id int8,
     primary key (order_id)
 );
 

@@ -1,6 +1,5 @@
 package com.myshop.testshop.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myshop.testshop.entities.enums.Role;
 import com.myshop.testshop.entities.enums.Status;
@@ -28,7 +27,7 @@ public class User{
     private String firstname;
     @Column(name = "lastname", length = 64)
     private String lastname;
-    @Column(name = "password", length = 3000, updatable = false)
+    @Column(name = "password", length = 3000)
     private String password;
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role", length = 128, updatable = false)
@@ -39,7 +38,6 @@ public class User{
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;
-    @JsonFormat(pattern = "yyyy-MM-dd'HH:mm:ss'")
     @Column(updatable = false)
     private LocalDateTime createdDate;
 

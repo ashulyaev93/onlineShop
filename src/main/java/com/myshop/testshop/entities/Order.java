@@ -1,6 +1,5 @@
 package com.myshop.testshop.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -20,18 +19,22 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", nullable = false, unique = true, updatable = false)
     private Long id;
-    @Column(name = "code", length = 64, unique = true)
+    @Column(name = "code", length = 64, unique = true, updatable = false)
     private String code;
     @Column(name = "total_price")
     private Double totalPrice;
-    @JsonFormat(pattern = "yyyy-MM-dd'HH:mm:ss'")
     @Column(updatable = false)
     private LocalDateTime createdDate;
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
+    @JoinColumn(name="user_id")
     private User user;
     @JsonIgnore
     @ManyToMany(mappedBy = "orders")
     private List<Product> product;
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdDate = LocalDateTime.now();
+    }
 }

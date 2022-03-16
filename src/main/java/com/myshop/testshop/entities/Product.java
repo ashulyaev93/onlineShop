@@ -1,6 +1,5 @@
 package com.myshop.testshop.entities;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -25,7 +24,6 @@ public class Product{
     private String title;
     @Column(name = "price")
     private Double price;
-    @JsonFormat(pattern = "yyyy-MM-dd'HH:mm:ss'")
     @Column(updatable = false)
     private LocalDateTime createdDate;
     @JsonIgnore
@@ -34,4 +32,9 @@ public class Product{
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private Set<Order> orders;
+
+    @PrePersist
+    protected void onCreate(){
+        this.createdDate = LocalDateTime.now();
+    }
 }
