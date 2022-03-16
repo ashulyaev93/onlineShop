@@ -14,4 +14,5 @@ public interface OrderService {
     public Order getOrderById(Long orderId);
     public List<Order> getAllOrders();
     public void addProducts(OrderProductDTO orderProductDTO);
+    public void deleteProduct(Long productId, Long orderId);
 }

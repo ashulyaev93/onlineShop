@@ -76,4 +76,16 @@ public class OrderController {
 
         return ResponseEntity.ok("Product with id = " + orderProductDTO.getProductId() + " added at order with id = " + orderProductDTO.getOrderId());
     }
+
+    @DeleteMapping("/deleteProduct")
+    public ResponseEntity<String> deleteProductFromOrder(@RequestParam("productId") Long productId,
+                                                         @RequestParam("orderId") Long orderId){
+        try{
+            orderService.deleteProduct(productId,orderId);
+        }catch(EmptyResultDataAccessException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok("Product with id = " + productId + " deleted from order with id = " + orderId + "!");
+    }
 }

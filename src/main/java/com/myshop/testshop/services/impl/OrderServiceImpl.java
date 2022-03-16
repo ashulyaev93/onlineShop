@@ -113,11 +113,27 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    public void updateProduct(){
+    @Override
+    public void deleteProduct(Long productId, Long orderId){
+        String sql = "DELETE FROM products_orders WHERE product_id=? AND order_id=?";
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
+            preparedStatement.setLong(1, productId);
+            preparedStatement.setLong(2, orderId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void deleteProduct(){
-
-    }
+    //цена каждого добавленного продукта в заказ должна суммироваться и в totalPrice должна вернуться сумма, в одно и то же время
+//    private Double mathPrice(OrderDTO orderDTO, ProductDTO productDTO){
+//        for (int i = 0; i < orderDTO.getProduct().size(); i++)
+//        {
+//            Double s;
+//
+//        }
+//        return null;
+//    }
 }
