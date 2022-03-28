@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManagerFactory;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service

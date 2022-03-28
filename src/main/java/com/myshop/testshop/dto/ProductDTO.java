@@ -12,6 +12,8 @@ public class ProductDTO {
     private Long id;
     private String title;
     private Double price;
+    private Double storageQuantity;
+    private String measure;
     private LocalDateTime createdDate;
     private Set<Order> orders;
 }

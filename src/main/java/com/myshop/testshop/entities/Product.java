@@ -23,7 +23,11 @@ public class Product{
     @Column(name = "title", length = 128, unique = true)
     private String title;
     @Column(name = "price")
-    private Double price;
+    private Double price;//цена за шт/кг
+    @Column(name = "storage_quantity")
+    private Double storageQuantity;
+    @Column(name = "measure")
+    private String measure;
     @Column(updatable = false)
     private LocalDateTime createdDate;
     @JsonIgnore

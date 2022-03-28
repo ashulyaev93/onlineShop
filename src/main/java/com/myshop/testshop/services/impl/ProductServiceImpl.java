@@ -40,6 +40,8 @@ public class ProductServiceImpl implements ProductService {
             product = new Product();
             product.setTitle(productDTO.getTitle());
             product.setPrice(productDTO.getPrice());
+            product.setStorageQuantity(productDTO.getStorageQuantity());
+            product.setMeasure(productDTO.getMeasure());
 
             productDAO.save(product);
         }else {
@@ -64,6 +66,8 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductById(productDTO.getId());
         product.setTitle(productDTO.getTitle());
         product.setPrice(productDTO.getPrice());
+        product.setStorageQuantity(productDTO.getStorageQuantity());
+        product.setMeasure(productDTO.getMeasure());
 
         return productDAO.save(product);
     }

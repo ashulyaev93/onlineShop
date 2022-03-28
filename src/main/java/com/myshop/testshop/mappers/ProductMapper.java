@@ -18,6 +18,8 @@ public interface ProductMapper {
             @Mapping(source="product.id", target="id"),
             @Mapping(source="product.title", target="title"),
             @Mapping(source="product.price", target="price"),
+            @Mapping(source="product.storageQuantity", target="storageQuantity"),
+            @Mapping(source="product.measure", target="measure"),
             @Mapping(source="product.orders", target="orders")
 
     })
@@ -26,6 +28,8 @@ public interface ProductMapper {
             @Mapping(source="productDTO.id", target="id"),
             @Mapping(source="productDTO.title", target="title"),
             @Mapping(source="productDTO.price", target="price"),
+            @Mapping(source="productDTO.storageQuantity", target="storageQuantity"),
+            @Mapping(source="productDTO.measure", target="measure"),
             @Mapping(target = "createdDate", ignore = true),
             @Mapping(target = "orders", ignore = true)
     })

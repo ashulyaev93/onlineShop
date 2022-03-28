@@ -11,6 +11,8 @@ create table products (
     product_id  bigserial not null,
     created_date timestamp,
     price float8,
+    storage_quantity float8,
+    measure varchar(64),
     title varchar(128),
     primary key (product_id)
 );
@@ -18,6 +20,8 @@ create table products (
 create table products_orders (
     product_id int8 not null,
     order_id int8 not null,
+    quantity float8,
+    price_for_quantity float8,
     primary key (product_id, order_id)
 );
 

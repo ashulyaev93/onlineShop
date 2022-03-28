@@ -4,6 +4,7 @@ import com.myshop.testshop.dao.OrderDAO;
 import com.myshop.testshop.dao.ProductDAO;
 import com.myshop.testshop.dto.OrderDTO;
 import com.myshop.testshop.dto.OrderProductDTO;
+import com.myshop.testshop.dto.ProductDTO;
 import com.myshop.testshop.entities.Order;
 import com.myshop.testshop.services.OrderService;
 import org.hibernate.Session;
@@ -97,12 +98,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void addProducts(OrderProductDTO orderProductDTO)
     {
-        String sql = "INSERT INTO products_orders (product_id, order_id) VALUES (?, ?)";
+        String sql = "INSERT INTO products_orders (product_id, order_id, quantity, priceForQuantity) VALUES (?, ?, ?, null)";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setLong(1, orderProductDTO.getProductId());
             preparedStatement.setLong(2, orderProductDTO.getOrderId());
+            preparedStatement.setDouble(3, orderProductDTO.getQuantity());
 
             int rowsAdded = preparedStatement.executeUpdate();
             if (rowsAdded > 0) {
@@ -111,6 +113,43 @@ public class OrderServiceImpl implements OrderService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        String sql1 = "UPDATE products_orders SET priceforquantity = quantity*(Select price FROM products where product_id = ?) where product_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement1 = connection.prepareStatement(sql1);
+
+            preparedStatement1.setLong(1, orderProductDTO.getProductId());
+            preparedStatement1.setLong(2, orderProductDTO.getProductId());
+            preparedStatement1.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sql2 = "UPDATE orders SET total_price=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
+
+            preparedStatement2.setLong(1, orderProductDTO.getOrderId());
+            preparedStatement2.setLong(2, orderProductDTO.getOrderId());
+            preparedStatement2.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //TODO:списывать товар при добавлении в заказ, прописать условие когда заканчивается товар
+//        String sql3 = "UPDATE storage_quantity SET products=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
+//        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+//            PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
+//
+//            preparedStatement3.setLong(1, orderProductDTO.getOrderId());
+//            preparedStatement3.setLong(2, orderProductDTO.getOrderId());
+//            preparedStatement3.executeUpdate();
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -125,15 +164,30 @@ public class OrderServiceImpl implements OrderService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
 
-    //цена каждого добавленного продукта в заказ должна суммироваться и в totalPrice должна вернуться сумма, в одно и то же время
-//    private Double mathPrice(OrderDTO orderDTO, ProductDTO productDTO){
-//        for (int i = 0; i < orderDTO.getProduct().size(); i++)
-//        {
-//            Double s;
+        String sql1 = "UPDATE orders SET total_price=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement1 = connection.prepareStatement(sql1);
+
+            preparedStatement1.setLong(1, orderId);
+            preparedStatement1.setLong(2, orderId);
+            preparedStatement1.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //TODO:и возвращать обратно при отказе
+//        String sql3 = "UPDATE storage_quantity SET products=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
+//        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+//            PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
 //
+//            preparedStatement3.setLong(1, orderProductDTO.getOrderId());
+//            preparedStatement3.setLong(2, orderProductDTO.getOrderId());
+//            preparedStatement3.executeUpdate();
 //        }
-//        return null;
-//    }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+    }
 }
