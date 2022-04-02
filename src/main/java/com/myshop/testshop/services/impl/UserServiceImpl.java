@@ -1,6 +1,6 @@
 package com.myshop.testshop.services.impl;
 
-import com.myshop.testshop.dao.UserDAO;
+import com.myshop.testshop.repositories.UserRepository;
 import com.myshop.testshop.dto.UserDTO;
 import com.myshop.testshop.entities.User;
 import com.myshop.testshop.exeptions.UserExistException;
@@ -14,19 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManagerFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserDAO usersDAO;
+    private UserRepository usersDAO;
     private EntityManagerFactory entityManagerFactory;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRepository.class);
 
     @Autowired
-    public UserServiceImpl(UserDAO usersDAO, EntityManagerFactory entityManagerFactory) {
+    public UserServiceImpl(UserRepository usersDAO, EntityManagerFactory entityManagerFactory) {
         this.usersDAO = usersDAO;
         this.entityManagerFactory = entityManagerFactory;
     }
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
         User user;
         if(userDTO.getId() == null) {
             user = new User();
-            user.setUsername(userDTO.getUsername());
+            user.setLogin(userDTO.getLogin());
             user.setFirstname(userDTO.getFirstname());
             user.setLastname(userDTO.getLastname());
             user.setPassword(userDTO.getPassword());
@@ -71,18 +70,18 @@ public class UserServiceImpl implements UserService {
         session.close();
 
         try{
-            logger.info("Saving user {}",user.getUsername());
+            logger.info("Saving user {}",user.getLogin());
             return user;
         }catch (Exception e){
             logger.error("Error during registration. {}", e.getMessage());
-            throw new UserExistException("The user " + user.getUsername() + " already exist. Please check credentials");
+            throw new UserExistException("The user " + user.getLogin() + " already exist. Please check credentials");
         }
     }
 
     @Override
     public User updateUser(UserDTO userDTO) {
         User user = getUserById(userDTO.getId());
-        user.setUsername(userDTO.getUsername());
+        user.setLogin(userDTO.getLogin());
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
         user.setPassword(userDTO.getPassword());

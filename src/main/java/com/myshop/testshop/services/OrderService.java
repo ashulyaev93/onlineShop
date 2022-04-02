@@ -2,7 +2,6 @@ package com.myshop.testshop.services;
 
 import com.myshop.testshop.dto.OrderDTO;
 import com.myshop.testshop.dto.OrderProductDTO;
-import com.myshop.testshop.dto.ProductDTO;
 import com.myshop.testshop.entities.Order;
 
 import java.util.List;
@@ -16,4 +15,5 @@ public interface OrderService {
     public List<Order> getAllOrders();
     public void addProducts(OrderProductDTO orderProductDTO);
     public void deleteProduct(Long productId, Long orderId);
+    public void updateProductForOrder(OrderProductDTO orderProductDTO);
 }

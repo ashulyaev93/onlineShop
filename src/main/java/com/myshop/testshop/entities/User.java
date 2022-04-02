@@ -21,8 +21,8 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, unique = true, updatable = false)
     private Long id;
-    @Column(name = "username", length = 64, unique = true)
-    private String username;
+    @Column(name = "login", length = 64, unique = true)
+    private String login;
     @Column(name = "firstname", length = 64)
     private String firstname;
     @Column(name = "lastname", length = 64)

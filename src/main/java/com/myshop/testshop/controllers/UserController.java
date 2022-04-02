@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +46,7 @@ public class UserController {
 
 
     @GetMapping
-//    @PreAuthorize("hasAuthority('user:read')")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<List<User>> getAllUsers(){
         List<User> usersList = userService.getAllUsers();
 
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-//    @PreAuthorize("hasAuthority('user:read')")
+    @PreAuthorize("hasAuthority('user:read')")
     public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId")String userId){
         User user = userService.getUserById(Long.parseLong(userId));
         UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-//    @PreAuthorize("hasAuthority('user:write')")
+    @PreAuthorize("hasAuthority('user:write')")
     public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId){
         try{
             userService.deleteUser(userId);

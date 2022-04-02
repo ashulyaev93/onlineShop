@@ -16,7 +16,7 @@ public interface UserMapper {
     @Named("userToUserDTO")
     @Mappings({
             @Mapping(source="user.id", target="id"),
-            @Mapping(source="user.username", target="username"),
+            @Mapping(source="user.login", target="login"),
             @Mapping(source="user.firstname", target="firstname"),
             @Mapping(source="user.lastname", target="lastname"),
             @Mapping(source="user.password", target="password"),
@@ -27,7 +27,7 @@ public interface UserMapper {
     UserDTO userToUserDTO(User user);
     @Mappings({
             @Mapping(source="userDTO.id", target="id"),
-            @Mapping(source="userDTO.username", target="username"),
+            @Mapping(source="userDTO.login", target="login"),
             @Mapping(source="userDTO.firstname", target="firstname"),
             @Mapping(source="userDTO.lastname", target="lastname"),
             @Mapping(source="userDTO.password", target="password"),

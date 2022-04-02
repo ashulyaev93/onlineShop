@@ -1,8 +1,8 @@
-package com.myshop.testshop.dao;
+package com.myshop.testshop.repositories;
 
 import com.myshop.testshop.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface ProductDAO extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 }
