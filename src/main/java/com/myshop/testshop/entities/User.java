@@ -21,20 +21,25 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false, unique = true, updatable = false)
     private Long id;
-    @Column(name = "login", length = 64, unique = true)
-    private String login;
+    @Column(name = "username", length = 64, unique = true)
+    private String username;
     @Column(name = "firstname", length = 64)
     private String firstname;
     @Column(name = "lastname", length = 64)
     private String lastname;
+    @Column(name = "email", length = 128, unique = true)
+    private String email;
     @Column(name = "password", length = 3000)
     private String password;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "role", length = 128, updatable = false)
     private Role role;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status", length = 128, updatable = false)
     private Status status;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private Set<Order> orders;

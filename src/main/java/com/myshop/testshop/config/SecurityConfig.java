@@ -1,24 +1,29 @@
 package com.myshop.testshop.config;
 
 import com.myshop.testshop.security.JwtConfigurer;
+import com.myshop.testshop.security.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        jsr250Enabled = true,
+        proxyTargetClass = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
-
-    private final JwtConfigurer jwtConfigurer;
+    private JwtConfigurer jwtConfigurer;
+    private UserDetailServiceImpl customerUserDetailService;
 
     public SecurityConfig(JwtConfigurer jwtConfigurer) {
         this.jwtConfigurer = jwtConfigurer;
@@ -40,14 +45,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .apply(jwtConfigurer);
     }
 
-    @Bean
     @Override
+    @Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
     @Bean
-    protected PasswordEncoder passwordEncoder() {
+    protected BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 }

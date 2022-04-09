@@ -33,7 +33,8 @@ create table users (
     password varchar(3000),
     role varchar(128),
     status varchar(128),
-    login varchar(64),
+    username varchar(64),
+    email varchar(128),
     primary key (user_id)
 );
 
@@ -41,7 +42,9 @@ alter table orders add constraint UK_gt3o4a5bqj59e9y6wakgk926t unique (code);
 
 alter table products add constraint UK_8xtpej5iy2w4cte2trlvrlayy unique (title);
 
-alter table users add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (login);
+alter table users add constraint UK_r43af9ap4edm43mmtq01oddj6 unique (username);
+
+-- alter table users add constraint unique (email);
 
 alter table orders add constraint FK32ql8ubntj5uh44ph9659tiih foreign key (user_id) references users;
 

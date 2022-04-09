@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmailValidator implements ConstraintValidator<ValidEmail,String> {
-    public static final String EMAIL_PATTERN = "A-Z";//TODO:нужен полный regex pattern
+    public static final String EMAIL_PATTERN = "^[A-Za-z0-9+_.-]+@(.+)$";
 
     @Override
     public void initialize(ValidEmail constraintAnnotation) {

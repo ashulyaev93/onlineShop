@@ -26,16 +26,8 @@ public class UserController {
         this.userService=userService;
     }
 
-    @PostMapping
-    public ResponseEntity<Object> addUser(@Validated @RequestBody UserDTO userDTO) throws UserExistException {//change with stream
-
-        User user = userService.createUser(userDTO);
-        UserDTO createUser = UserMapper.INSTANCE.userToUserDTO(user);
-
-        return new ResponseEntity<>(createUser, HttpStatus.OK);
-    }
-
     @PutMapping
+    @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<Object> updateUser(@Validated @RequestBody UserDTO userDTO) throws UserExistException {//change with stream
 
         User user = userService.updateUser(userDTO);
@@ -63,7 +55,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @PreAuthorize("hasAuthority('user:write')")
+    @PreAuthorize("hasAuthority('admin:write')")
     public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId){
         try{
             userService.deleteUser(userId);

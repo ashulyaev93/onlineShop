@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 public class UsernameRequest
 {
     @NotEmpty(message = "Username cannot be empty")
-    private String login;
+    private String username;
     @NotEmpty(message = "Password cannot be empty")
     private String password;
 }

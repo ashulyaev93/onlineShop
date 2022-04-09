@@ -20,7 +20,6 @@ public class SecurityUser implements UserDetails {
     private final List<SimpleGrantedAuthority> authorities;
     private final boolean isActive;
 
-    //TODO: поля менять!!!
     public SecurityUser(String username, String firstname, String lastname, String password, List<SimpleGrantedAuthority> authorities, boolean isActive) {
         this.username = username;
         this.firstname= firstname;
@@ -67,7 +66,7 @@ public class SecurityUser implements UserDetails {
 
     public static UserDetails fromUser(User user) {
         return new org.springframework.security.core.userdetails.User(
-                user.getLogin(),
+                user.getUsername(),
                 user.getPassword(),
                 user.getStatus().equals(Status.ACTIVE),
                 user.getStatus().equals(Status.ACTIVE),

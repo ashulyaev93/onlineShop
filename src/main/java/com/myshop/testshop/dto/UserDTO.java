@@ -4,9 +4,6 @@ import com.myshop.testshop.entities.Order;
 import com.myshop.testshop.entities.enums.Role;
 import com.myshop.testshop.entities.enums.Status;
 import lombok.Data;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -15,10 +12,11 @@ import java.util.Set;
 public class UserDTO {
 
     private Long id;
-    private String login;
+    private String username;
     private String firstname;
     private String lastname;
     private String password;
+    private String email;
     private Role role;
     private Status status;
     private Set<Order> orders;

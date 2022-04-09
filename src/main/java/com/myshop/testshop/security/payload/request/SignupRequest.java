@@ -17,11 +17,11 @@ public class SignupRequest {
     @ValidEmail
     private String email;
     @NotEmpty(message = "Please enter you name")
-    private String name;
+    private String firstname;
     @NotEmpty(message = "Please enter you lastname")
     private String lastname;
     @NotEmpty(message = "Please enter you username")
-    private String login;
+    private String username;
     @NotEmpty(message = "Password is required")
     @Size(min = 6)
     private String password;
