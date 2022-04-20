@@ -2,6 +2,7 @@ package com.myshop.testshop.security.payload.request;
 
 import com.myshop.testshop.annotations.PasswordMatches;
 import com.myshop.testshop.annotations.ValidEmail;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
+@Builder
 @PasswordMatches
 public class SignupRequest {
     @Email(message = "It should have email format")
