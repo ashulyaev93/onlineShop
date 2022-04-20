@@ -89,9 +89,11 @@ public class OrderController {
         return ResponseEntity.ok("Product with id = " + productId + " deleted from order with id = " + orderId + "!");
     }
 
-    //TODO:обновлять поля заказа
     @PutMapping("/updateProduct")
-    public ResponseEntity<Object> updateProductFromOrder(){
-        return null;
+    public ResponseEntity<Object> updateProductFromOrder(@Validated @RequestBody OrderProductDTO orderProductDTO){
+
+        orderService.updateProductForOrder(orderProductDTO);
+
+        return ResponseEntity.ok("Order with id = " + orderProductDTO.getOrderId() + " updated");
     }
 }

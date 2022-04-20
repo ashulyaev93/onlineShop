@@ -1,10 +1,9 @@
 package com.myshop.testshop.services.impl;
 
-import com.myshop.testshop.dao.OrderDAO;
-import com.myshop.testshop.dao.ProductDAO;
+import com.myshop.testshop.repositories.OrderRepository;
+import com.myshop.testshop.repositories.ProductRepository;
 import com.myshop.testshop.dto.OrderDTO;
 import com.myshop.testshop.dto.OrderProductDTO;
-import com.myshop.testshop.dto.ProductDTO;
 import com.myshop.testshop.entities.Order;
 import com.myshop.testshop.services.OrderService;
 import org.hibernate.Session;
@@ -26,17 +25,17 @@ import java.util.UUID;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    private OrderDAO orderDAO;
+    private OrderRepository orderRepository;
     private EntityManagerFactory entityManagerFactory;
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/shop";
     private static final String USER = "postgres";
     private static final String PASS = "135246";
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductRepository.class);
 
     @Autowired
-    public OrderServiceImpl(OrderDAO orderDAO, EntityManagerFactory entityManagerFactory){
-        this.orderDAO = orderDAO;
+    public OrderServiceImpl(OrderRepository orderRepository, EntityManagerFactory entityManagerFactory){
+        this.orderRepository = orderRepository;
         this.entityManagerFactory = entityManagerFactory;
     }
 
@@ -53,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
             order.setTotalPrice(orderDTO.getTotalPrice());//create auto with help math
             order.setUser(orderDTO.getUser());
 
-            orderDAO.save(order);
+            orderRepository.save(order);
         }else {
             order = session.get(Order.class, orderDTO.getId());
             session.update(order);
@@ -77,22 +76,22 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(orderDTO.getTotalPrice());
         order.setUser(orderDTO.getUser());
 
-        return orderDAO.save(order);
+        return orderRepository.save(order);
     }
 
     @Override
     public void deleteOrder(Long orderId) {
-        orderDAO.deleteById(orderId);
+        orderRepository.deleteById(orderId);
     }
 
     @Override
     public Order getOrderById(Long orderId) {
-        return orderDAO.findById(orderId).get();
+        return orderRepository.findById(orderId).get();
     }
 
     @Override
     public List<Order> getAllOrders() {
-        return orderDAO.findAll();
+        return orderRepository.findAll();
     }
 
     @Override
@@ -138,22 +137,36 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
         }
 
-        //TODO:списывать товар при добавлении в заказ, прописать условие когда заканчивается товар
-//        String sql3 = "UPDATE storage_quantity SET products=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
-//        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
-//            PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
-//
-//            preparedStatement3.setLong(1, orderProductDTO.getOrderId());
-//            preparedStatement3.setLong(2, orderProductDTO.getOrderId());
-//            preparedStatement3.executeUpdate();
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        String sql4 = "UPDATE products SET storage_quantity=storage_quantity-(Select quantity FROM products_orders where products_orders.product_id = ? and products_orders.order_id = ?) where product_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement4 = connection.prepareStatement(sql4);
+
+            preparedStatement4.setLong(1, orderProductDTO.getProductId());
+            preparedStatement4.setLong(2, orderProductDTO.getOrderId());
+            preparedStatement4.setDouble(3, orderProductDTO.getProductId());
+            preparedStatement4.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void deleteProduct(Long productId, Long orderId){
+    public void deleteProduct(Long productId, Long orderId)
+    {
+        String sql3 = "UPDATE products SET storage_quantity=storage_quantity+(Select quantity FROM products_orders where products_orders.product_id = ? and products_orders.order_id = ?) where product_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
+
+            preparedStatement3.setLong(1, productId);
+            preparedStatement3.setLong(2, orderId);
+            preparedStatement3.setDouble(3, productId);
+            preparedStatement3.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         String sql = "DELETE FROM products_orders WHERE product_id=? AND order_id=?";
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -176,18 +189,65 @@ public class OrderServiceImpl implements OrderService {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
-        //TODO:и возвращать обратно при отказе
-//        String sql3 = "UPDATE storage_quantity SET products=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
-//        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
-//            PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
-//
-//            preparedStatement3.setLong(1, orderProductDTO.getOrderId());
-//            preparedStatement3.setLong(2, orderProductDTO.getOrderId());
-//            preparedStatement3.executeUpdate();
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+    @Override
+    public void updateProductForOrder(OrderProductDTO orderProductDTO)
+    {
+        String sql = "UPDATE products_orders SET quantity = ? WHERE product_id=? AND order_id=? ";
+        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setDouble(1, orderProductDTO.getQuantity());
+            preparedStatement.setLong(2, orderProductDTO.getProductId());
+            preparedStatement.setLong(3, orderProductDTO.getOrderId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sql1 = "UPDATE products_orders SET priceforquantity = quantity*(Select price FROM products where product_id = ?) where product_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement1 = connection.prepareStatement(sql1);
+
+            preparedStatement1.setLong(1, orderProductDTO.getProductId());
+            preparedStatement1.setLong(2, orderProductDTO.getProductId());
+            preparedStatement1.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String sql2 = "UPDATE orders SET total_price=(Select sum(priceforquantity) FROM products_orders where products_orders.order_id = ?) where order_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)){
+            PreparedStatement preparedStatement2 = connection.prepareStatement(sql2);
+
+            preparedStatement2.setLong(1, orderProductDTO.getOrderId());
+            preparedStatement2.setLong(2, orderProductDTO.getOrderId());
+            preparedStatement2.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //TODO:всё отрабатывает, но в таблице не обновляет. Запрос, который отправляется руками проходит.
+        String sql3 = "UPDATE products SET storage_quantity=storage_quantity + ((Select quantity FROM products_orders where products_orders.product_id= ? AND products_orders.order_id = ?)- ? ) where product_id = ?";
+        try(Connection connection = DriverManager.getConnection(DB_URL, USER, PASS))
+        {
+            PreparedStatement preparedStatement3 = connection.prepareStatement(sql3);
+
+            preparedStatement3.setLong(1, orderProductDTO.getProductId());
+            preparedStatement3.setLong(2, orderProductDTO.getOrderId());
+            preparedStatement3.setDouble(3, orderProductDTO.getQuantity());
+            preparedStatement3.setLong(4, orderProductDTO.getProductId());
+            int rowsUp = preparedStatement3.executeUpdate();
+            if (rowsUp > 0)
+            {
+                System.out.println("Storage_quantity with product_id = " + orderProductDTO.getProductId() + " were update successfully!");
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

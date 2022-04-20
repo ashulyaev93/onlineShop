@@ -20,6 +20,7 @@ public interface UserMapper {
             @Mapping(source="user.firstname", target="firstname"),
             @Mapping(source="user.lastname", target="lastname"),
             @Mapping(source="user.password", target="password"),
+            @Mapping(source="user.email", target="email"),
             @Mapping(source="user.role", target="role"),
             @Mapping(source="user.status", target="status"),
             @Mapping(source="user.orders", target="orders")
@@ -31,8 +32,9 @@ public interface UserMapper {
             @Mapping(source="userDTO.firstname", target="firstname"),
             @Mapping(source="userDTO.lastname", target="lastname"),
             @Mapping(source="userDTO.password", target="password"),
-            @Mapping(target = "role", ignore = true),
-            @Mapping(target = "status", ignore = true),
+            @Mapping(source = "userDTO.email", target = "email"),
+            @Mapping(source = "userDTO.role", target = "role"),
+            @Mapping(source = "userDTO.status", target = "status"),
             @Mapping(target = "orders", ignore = true),
             @Mapping(target = "createdDate", ignore = true)
     })

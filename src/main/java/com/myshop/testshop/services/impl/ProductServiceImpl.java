@@ -1,6 +1,6 @@
 package com.myshop.testshop.services.impl;
 
-import com.myshop.testshop.dao.ProductDAO;
+import com.myshop.testshop.repositories.ProductRepository;
 import com.myshop.testshop.dto.ProductDTO;
 import com.myshop.testshop.entities.Product;
 import com.myshop.testshop.exeptions.ProductExistException;
@@ -19,14 +19,14 @@ import java.util.List;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private ProductDAO productDAO;
+    private ProductRepository productRepository;
     private EntityManagerFactory entityManagerFactory;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductDAO.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductRepository.class);
 
     @Autowired
-    public ProductServiceImpl(ProductDAO productDAO, EntityManagerFactory entityManagerFactory){
-        this.productDAO = productDAO;
+    public ProductServiceImpl(ProductRepository productRepository, EntityManagerFactory entityManagerFactory){
+        this.productRepository = productRepository;
         this.entityManagerFactory = entityManagerFactory;
     }
 
@@ -43,7 +43,7 @@ public class ProductServiceImpl implements ProductService {
             product.setStorageQuantity(productDTO.getStorageQuantity());
             product.setMeasure(productDTO.getMeasure());
 
-            productDAO.save(product);
+            productRepository.save(product);
         }else {
             product = session.get(Product.class, productDTO.getId());
             session.update(product);
@@ -69,21 +69,21 @@ public class ProductServiceImpl implements ProductService {
         product.setStorageQuantity(productDTO.getStorageQuantity());
         product.setMeasure(productDTO.getMeasure());
 
-        return productDAO.save(product);
+        return productRepository.save(product);
     }
 
     @Override
     public void deleteProduct(Long productId) {
-        productDAO.deleteById(productId);
+        productRepository.deleteById(productId);
     }
 
     @Override
     public Product getProductById(Long productId) {
-        return productDAO.findById(productId).get();
+        return productRepository.findById(productId).get();
     }
 
     @Override
     public List<Product> getAllProduct() {
-        return productDAO.findAll();
+        return productRepository.findAll();
     }
 }
